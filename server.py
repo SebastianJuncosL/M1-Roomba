@@ -26,23 +26,20 @@ def roomPortrayal(roomba):
 
 
 grid = CanvasGrid(roomPortrayal, 10, 10, 500, 500)
-
-chart = ChartModule([{"Label": "Total Steps", "Color": "Pink"}],
-                    data_collector_name='datacollector')
-
-cells = ChartModule([{"Label": "Dirty Tiles", "Color": "Blue"}],
-                    data_collector_name='datacollector')
+cells = ChartModule([{"Label": "Dirty Tiles", "Color": "Blue"}])
+chart = ChartModule([{"Label": "Total Steps", "Color": "Pink"}])
+times = ChartModule([{"Label": "Time", "Color": "Green"}])
 
 
 model_params = {
     "height": 10,
     "width": 10,
     "noOfAgents": UserSettableParameter("slider", "Roombas", 3, 1, 15, 1),
-    "dirtyTiles": UserSettableParameter("slider", "Dirty tiles", 5, 1, 40, 1),
+    "dirtyTiles": UserSettableParameter("slider", "Dirty Tiles", 5, 1, 40, 1),
     "limit": UserSettableParameter("slider", "Time", 60, 10, 180, 1)
 }
 
-server = ModularServer(Room, [grid, chart, cells],
+server = ModularServer(Room, [grid, chart, cells, times],
                        "Roomba Simulation", model_params)
 
 server.port = 8521

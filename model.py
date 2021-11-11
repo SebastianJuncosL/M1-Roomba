@@ -36,25 +36,32 @@ class Room(Model):
 
         self.datacollector = DataCollector(
             {
-                "Dirty Tiles": self.countCleanTiles(),
+                "DirtyTiles": self.count(),
                 "Total Steps": lambda m: self.count_type(m, "totalRoombaSteps"),
-                "Time": lambda m: self.count_type(m, "time"),
+                "Time": round(time.time() - self.time, 2)
             }
         )
 
     def countCleanTiles(self) -> int:
-        count = self.schedule.get_agent_count()
+        # count = self.schedule.get_agent_count()
+        # return self.schedule.get_agent_count()
+        count = 0
+        for tile in self.schedule.agents:
+            if isinstance(tile, FloorTile):
+                count += 1
         print(count)
-        return self.schedule.get_agent_count()
-        # count = 0
-        # for tile in self.schedule.agents:
-        #     if isinstance(tile, FloorTile):
-        #         count += 1
-        # print(count)
-        # return count
+        return count
+
+    def count(self) -> int:
+        count = 0
+        for i, x, y in self.grid.coord_iter():
+            if type(i).__name__ == "FloorTile":
+                count += 1
+        print(count)
+        return count
 
     def step(self):
         self.totalRoombaSteps += self.agents
         self.schedule.step()
-        if (time.time() - self.time >= self.limit) or (self.countCleanTiles() == 0):
+        if (time.time() - self.time >= self.limit) or (self.count() == 0):
             self.running = False
